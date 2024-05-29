@@ -7,17 +7,17 @@ export const CARDS = {
 export const CARD_META_DATA = {
     'THE_APOTHECARY' : {
         name : 'THE_APOTHECARY',
-        image : '/src/image/card1.png',
+        image : '/image/card_The_Apothecary.png',
         maxQuantity : 5
     },
     'HOUSE_OF_MIRRORS' : {
         name : 'HOUSE_OF_MIRRORS',
-        image : '/src/image/card2.png',
+        image : '/image/card_House_of_Mirrors.webp',
         maxQuantity : 8
     },
     'UNREQUITED_LOVE' : {
         name : 'UNREQUITED_LOVE',
-        image : '/src/image/card3.png',
+        image : '/image/card_Unrequited_Love.png',
         maxQuantity : 16
     }
 }

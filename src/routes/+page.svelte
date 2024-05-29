@@ -1,28 +1,23 @@
+<script context="module">
+    /**
+     * @typedef {Object} Card
+     * @property {number} id
+     * @property {string} name
+     * @property {number} stockQuantity
+     */
+</script>
+
 <script>
-    import Inventory from "$lib/Inventory.svelte";
+    import Inventory from "$lib/inventory/Inventory.svelte";
 
-    let cards = [
-        {
-            name : "UNREQUITED_LOVE",
-            stockQuantity : 20
-        },
-        {
-            name : "THE_APOTHECARY",
-            stockQuantity : 8
-        },
-        {
-            name : "HOUSE_OF_MIRRORS",
-            stockQuantity : 16
-        }
-    ]
+    /** @type {import('./$types').PageServerData} */
+    export let data;
 
-    function onClick(event) {
-        console.log(event.detail);
-    }
+    /** @type {Card[]} */
+    let cards = data.data;
+
+
 
 </script>
 
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
-<a href="/login"><button>Login</button></a>
-<Inventory on:click={onClick} cards={cards} />
+<Inventory cards={cards} />

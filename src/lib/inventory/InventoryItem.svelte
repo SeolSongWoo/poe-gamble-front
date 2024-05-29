@@ -2,22 +2,23 @@
     import {createEventDispatcher} from "svelte";
 
     export let itemProps;
-    export let onClick = () => {};
 
     let item;
 
     const dispatch = createEventDispatcher();
 
-    switch (itemProps.type) {
+    $: switch (itemProps.type) {
         case "CARD" :
             item = {
-                src : "/image/invenCard.png",
-                stock : itemProps.stock
+                name : itemProps.name,
+                src : "/image/inven_card.png",
+                stock : itemProps.stock,
+                props:itemProps
             }
             break;
     }
 
-    function handleCLick() {
+    function handleCLick(event) {
         dispatch('click', item);
     }
 </script>
