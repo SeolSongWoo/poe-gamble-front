@@ -1,6 +1,9 @@
 <script>
 
+    import {CARD_META_DATA} from "$lib/CardMetaData.js";
+
     export let isPopupOpen = false;
+    export let isCardOpen = false;
     export let openCardData = {};
     export let onSplitCard = () => {};
 
@@ -13,12 +16,18 @@
         isSplitPopup = false;
     }
 
+
     function handleSplitClick(event) {
         isSplitPopup = true
     }
 
     function handleHortClick(event) {
-
+        const cardMaxQuantity = CARD_META_DATA[openCardData.name].maxQuantity;
+        if(openCardData.stock > cardMaxQuantity / 2) {
+            alert('투입갯수 초과');
+            return;
+        }
+        isCardOpen = true
     }
 
     function onSplit() {

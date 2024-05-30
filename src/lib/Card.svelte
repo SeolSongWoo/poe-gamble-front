@@ -1,10 +1,12 @@
 <script>
     import {CARD_META_DATA} from "$lib/CardMetaData.js";
+    import {createEventDispatcher} from "svelte";
 
     /**
      * @type {Object}
      */
     export let card;
+    const dispatch = createEventDispatcher();
 
     $: maxQuantity = getMaxQuantity(card.name);
     $: itemImage = getItemImage(card.name);
@@ -35,9 +37,10 @@
         }
     }
 
+
 </script>
 
-<span class="card-wrapper">
+<span class="card-wrapper" on:click={() => dispatch('click', card)} >
     <span class="card-image">
         <img src={itemImage} alt={card.name}/>
     </span>

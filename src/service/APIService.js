@@ -11,4 +11,13 @@ export default class APIService {
             url: `/users/cards`
         });
     }
+
+    static postTryGambling(cardData) {
+        return customFetch.fetch({
+            method: FetchUtil.HTTP_METHOD.POST,
+            headers: FetchUtil.CONTENT_TYPE.JSON,
+            url: `/gamble/try`,
+            body: cardData
+        });
+    }
 }

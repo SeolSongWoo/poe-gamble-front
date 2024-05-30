@@ -1,0 +1,8 @@
+@font-face {
+    font-family: fontin;
+    src: url("/font/Fontin-Italic.otf") format("truetype");
+}
+
+body {
+    font-family: fontin, serif;
+}
