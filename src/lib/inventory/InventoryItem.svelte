@@ -21,9 +21,13 @@
     function handleCLick(event) {
         dispatch('click', item);
     }
+
+    function handleView(event) {
+        dispatch('view', item);
+    }
 </script>
 
-<div on:click={handleCLick} >
+<div on:click={handleCLick} on:mouseenter={handleView} >
     <img src={item.src} alt="card"/>
     <div>{item.stock}</div>
 </div>
