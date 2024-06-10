@@ -29,4 +29,13 @@ export default class APIService {
             body: userData
         })
     }
+
+    static async register(account) {
+        return await customFetch.fetch({
+            method: FetchUtil.HTTP_METHOD.POST,
+            headers: FetchUtil.CONTENT_TYPE.JSON,
+            url: `/users/create`,
+            body: account
+        })
+    }
 }

@@ -1,6 +1,6 @@
 <script>
 
-    import {CARD_META_DATA} from "$lib/CardMetaData.js";
+    import {CARD_META_DATA} from "$lib/item/card/CardMetaData.js";
 
     export let isPopupOpen = false;
     export let isCardOpen = false;

@@ -18,12 +18,12 @@ export const actions = {
     default: async ({cookies, request, url}) => {
         const data = await request.formData();
         const email = data.get('email');
+        const poeName = data.get('poeName');
         const password = data.get('password');
         try {
-            let account = {email, password};
-            Valid.login(account);
-            const response = await APIService.login(account);
-            cookies.set('Authorization', response.data, {path: '/', sameSite: 'strict', httpOnly: true, maxAge: 60 * 60 * 24});
+            let account = {email, poeName, password};
+            Valid.register(account);
+            const response = await APIService.register(account);
         } catch (e) {
             switch (e) {
                 case InvalidEmailFormatException:
@@ -35,6 +35,6 @@ export const actions = {
                     return fail(400, {email, badRequest: true})
             }
         }
-        redirect(302, '/');
+        redirect(302, '/login');
     }
 }

@@ -1,9 +1,9 @@
 <script>
 
-    import {CARD_META_DATA} from "$lib/CardMetaData.js";
+    import {CARD_META_DATA} from "$lib/item/card/CardMetaData.js";
     import InventoryItem from "$lib/inventory/InventoryItem.svelte";
     import {createEventDispatcher, onMount} from "svelte";
-    import Card from "$lib/Card.svelte";
+    import Card from "$lib/item/card/Card.svelte";
     import InventoryPopup from "$lib/inventory/popup/InventoryPopup.svelte";
     import {Button} from "flowbite-svelte";
 
@@ -13,18 +13,17 @@
     export let cards = [];
 
 
-    const dispatch = createEventDispatcher();
-
     let isCardOpen = false;
+    let isCardViewOpen = false;
     let isPopupOpen = false;
     let openCardData = {};
     let inventoryItems = [];
     let hortItems = {};
 
-    $: if(isCardOpen) {
+    $: if (isCardOpen) {
         hortItems = openCardData.props;
         const index = inventoryItems.findIndex(item => item.index === openCardData.props.index);
-        inventoryItems[index] = {index:openCardData.props.index,type: "EMPTY", name: "", stock: "0"};
+        inventoryItems[index] = {index: openCardData.props.index, type: "EMPTY", name: "", stock: "0"};
     }
 
     $: console.log(isCardOpen);
@@ -37,7 +36,7 @@
             let bundles = [];
             while (stockQuantity > 0) {
                 let bundleSize = Math.min(stockQuantity, maxBundleQuantity);
-                bundles.push({index:index++,type: "CARD", name: cardName, stock: bundleSize});
+                bundles.push({index: index++, type: "CARD", name: cardName, stock: bundleSize});
                 stockQuantity -= bundleSize;
             }
             return bundles;
@@ -60,7 +59,7 @@
             inventoryItems = inventoryItems.slice(0, targetLength);
         } else {
             while (inventoryItems.length < targetLength) {
-                inventoryItems.push({index:index++,type: "EMPTY", name: "", stock: "0"});
+                inventoryItems.push({index: index++, type: "EMPTY", name: "", stock: "0"});
             }
         }
     }
@@ -72,7 +71,7 @@
         if (index !== -1 && splitValue > 0 && splitValue < inventoryItems[index].stock) {
             inventoryItems[index].stock -= splitValue;
             const emptyIndex = getEmptyIndex();
-            inventoryItems[getEmptyIndex()] = {index:emptyIndex,type: "CARD", name: card.name, stock: splitValue};
+            inventoryItems[getEmptyIndex()] = {index: emptyIndex, type: "CARD", name: card.name, stock: splitValue};
         }
     }
 
@@ -82,12 +81,17 @@
         openCardData = event.detail;
     }
 
+    function handleItemView(event) {
+        isCardViewOpen = true;
+        openCardData = event.detail;
+    }
+
     async function tryGambling(event) {
-        if(openCardData.stock === 0 || openCardData.stock >(CARD_META_DATA[openCardData.name].maxQuantity / 2)) {
+        if (openCardData.stock === 0 || openCardData.stock > (CARD_META_DATA[openCardData.name].maxQuantity / 2)) {
             console.log('card not enough stock')
             return;
         }
-        if(openCardData) {
+        if (openCardData) {
             const response = (await fetch('/api/v1/gambling', {
                 method: 'POST',
                 headers: {
@@ -101,7 +105,7 @@
             const data = (await response).data;
             openCardData.stock = data.stockQuantity;
             openCardData.props.stock = data.stockQuantity;
-            if(data.stockQuantity === 0) {
+            if (data.stockQuantity === 0) {
                 isCardOpen = false;
             }
         }
@@ -111,6 +115,12 @@
     function handleClickOutside(event) {
         if (!itemNode.contains(event.target)) {
             isPopupOpen = false;
+        }
+    }
+
+    function handleViewOutside(event) {
+        if (!itemNode.contains(event.target)) {
+            isCardViewOpen = false;
         }
     }
 
@@ -124,6 +134,7 @@
     // 컴포넌트 마운트 시에 이벤트 리스너 등록
     onMount(() => {
         window.addEventListener('click', handleClickOutside);
+        window.addEventListener('mousemove', handleViewOutside);
 
         // 컴포넌트가 파괴될 때 이벤트 리스너 제거
         return () => {
@@ -133,21 +144,26 @@
 </script>
 
 <div style="display: flex">
-<div class="inventory" bind:this={itemNode}>
-    {#each inventoryItems as item}
-        <div class="inventory-item">
-            {#if item.type !== "EMPTY"}
-                <InventoryItem on:click={handleItemClick} itemProps={item}/>
-            {/if}
+    <div class="inventory" bind:this={itemNode}>
+        {#each inventoryItems as item}
+            <div class="inventory-item">
+                {#if item.type !== "EMPTY"}
+                    <InventoryItem on:click={handleItemClick} on:view={handleItemView} itemProps={item}/>
+                {/if}
+            </div>
+        {/each}
+    </div>
+    {#if isCardOpen}
+        <Card on:click={handleHortCardClick} bind:card="{openCardData}"/>
+        <Button on:click={tryGambling} color="alternative">실행</Button>
+    {/if}
+    {#if isCardViewOpen}
+        <div class="viewing">
+            <Card class="small" bind:card="{openCardData}"/>
         </div>
-    {/each}
-</div>
-{#if isCardOpen}
-    <Card on:click={handleHortCardClick} bind:card="{openCardData}"/>
-    <Button on:click={tryGambling} color="alternative">실행</Button>
-{/if}
+    {/if}
 
-<InventoryPopup bind:openCardData bind:isPopupOpen bind:isCardOpen onSplitCard={onSplitCard} />
+    <InventoryPopup bind:openCardData bind:isPopupOpen bind:isCardOpen onSplitCard={onSplitCard}/>
 </div>
 
 <style>
@@ -168,5 +184,11 @@
         align-items: center;
         justify-content: center;
         background-color: #f0f0f0;
+    }
+
+    .viewing {
+        position: absolute;
+        bottom: 0;
+        left: 0;
     }
 </style>

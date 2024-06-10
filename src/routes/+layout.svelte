@@ -1,10 +1,8 @@
 <script>
     import '../app.css'
+    import Header from "$lib/Header.svelte";
 </script>
 
-<nav>
-    <a href="/">Home</a>
-    <a href="/login">Login</a>
-</nav>
+<Header/>
 
 <slot/>
