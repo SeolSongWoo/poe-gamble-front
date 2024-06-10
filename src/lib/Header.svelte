@@ -4,16 +4,14 @@
 
 <header>
     <div class="container-center-horizontal">
-        <div class="navigation screen " data-id="3:207">
+        <div class="navigation screen ">
             <div class="items" data-id="3:208">
-                <div class="page valign-text-middle body-text" data-id="3:209">Page</div>
-                <div class="page valign-text-middle body-text" data-id="3:210">Page</div>
-                <div class="page valign-text-middle body-text" data-id="3:211">Page</div>
-                <div class="button" data-id="3:212">
-                    <div class="button valign-text-middle small-text" data-id="3:213">Button</div>
-                </div>
+                <div class="page valign-text-middle body-text">Page</div>
+                <div class="page valign-text-middle body-text">Page</div>
+                <div class="page valign-text-middle body-text">Page</div>
+                <div class="page valign-text-middle body-text">Page</div>
             </div>
-            <h1 class="title valign-text-middle" data-id="3:214">POE GAMBLE</h1></div>
+            <h1 class="title valign-text-middle">POE GAMBLE</h1></div>
     </div>
 </header>
 
@@ -33,7 +31,7 @@
 
     .navigation {
         background-color: #191f25;
-        height: 164px;
+        height: 80px;
         overflow: hidden;
         overflow-x: hidden;
         position: relative;
@@ -48,7 +46,7 @@
         justify-content: flex-end;
         right: 15%;
         position: absolute;
-        top: 56px;
+        top: 25%;
     }
 
     .title {
@@ -58,13 +56,13 @@
         font-size: var(--font-size-l);
         font-style: normal;
         font-weight: 500;
-        height: 72px;
+        height: 100%;
         left: 80px;
         letter-spacing: 0.00px;
         line-height: 72px;
         position: absolute;
         text-align: left;
-        top: 45px;
+        top: 10%;
         white-space: nowrap;
         width: auto;
     }
@@ -98,32 +96,6 @@
         font-style: normal;
         font-weight: 500;
         letter-spacing: 0px;
-    }
-
-    .button {
-        align-items: center;
-        background-color: var(--white);
-        border-radius: 8px;
-        box-shadow: 0px 1px 2px #0000000d;
-        display: inline-flex;
-        flex: 0 0 auto;
-        gap: 8px;
-        justify-content: center;
-        padding: 14px 24px;
-        position: relative;
-    }
-
-    .button div {
-        background-color: transparent;
-        color: #191f25;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 24px;
-        margin-top: -1.00px;
-        position: relative;
-        text-align: left;
-        white-space: nowrap;
-        width: fit-content;
     }
 
     .screen * {
