@@ -1,15 +1,12 @@
 <script>
-
+    import { DarkMode } from 'flowbite-svelte';
 </script>
 
 <header>
     <div class="container-center-horizontal">
         <div class="navigation screen ">
             <div class="items" data-id="3:208">
-                <div class="page valign-text-middle body-text">Page</div>
-                <div class="page valign-text-middle body-text">Page</div>
-                <div class="page valign-text-middle body-text">Page</div>
-                <div class="page valign-text-middle body-text">Page</div>
+                <DarkMode />
             </div>
             <h1 class="title valign-text-middle">POE GAMBLE</h1></div>
     </div>

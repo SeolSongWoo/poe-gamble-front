@@ -3,27 +3,26 @@ import APIService from "../../service/APIService.js";
 import {
     InvalidEmailFormatException,
     ObjectNullException,
-    PasswordLengthExceededException
+    PasswordLengthExceededException, UnauthorizedException
 } from "../../util/Exception.js";
 import {fail, redirect} from "@sveltejs/kit";
-
-/**
- * 1 : 비밀번호 길이 오류
- * 2 : 이메일 형식 오류
- * 3 : BAD REQUEST 오류
- */
 
 /** type {import('./$types').Actions} */
 export const actions = {
     default: async ({cookies, request, url}) => {
+        const apiService = new APIService(cookies);
         const data = await request.formData();
         const email = data.get('email');
         const password = data.get('password');
         try {
             let account = {email, password};
             Valid.login(account);
-            const response = await APIService.login(account);
-            cookies.set('Authorization', response.data, {path: '/', sameSite: 'strict', httpOnly: true, maxAge: 60 * 60 * 24});
+            const {body:response} = await apiService.login(account);
+            if(response?.status === 401 || response?.status !== 200) {
+                return fail(401, {email, unAuthorized: true})
+            }
+            cookies.set('Authorization', response.data.accessToken, {path: '/', sameSite: 'strict', httpOnly: true});
+            cookies.set('RefreshToken', response.data.refreshToken, {path: '/', sameSite: 'strict', httpOnly: true});
         } catch (e) {
             switch (e) {
                 case InvalidEmailFormatException:
@@ -35,6 +34,6 @@ export const actions = {
                     return fail(400, {email, badRequest: true})
             }
         }
-        redirect(302, '/');
+        redirect(302, '/main');
     }
 }

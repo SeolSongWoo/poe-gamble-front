@@ -18,3 +18,10 @@ export class ObjectNullException extends Error {
         this.name = "ObjectNullException";
     }
 }
+
+export class UnauthorizedException extends Error {
+    constructor(message) {
+        super(message);
+        this.name = "UnauthorizedException";
+    }
+}

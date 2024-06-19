@@ -92,7 +92,7 @@
             return;
         }
         if (openCardData) {
-            const response = (await fetch('/api/v1/gambling', {
+            const response = await fetch('/api/v1/gambling', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -101,8 +101,13 @@
                     cardName: openCardData.name,
                     tryQuantity: openCardData.stock
                 })
-            })).json();
-            const data = (await response).data;
+            });
+            const responseJson = await response.json();
+            const data = responseJson.data;
+            if(responseJson.status === 400) {
+                alert('비정상적인 접근입니다.');
+                return;
+            }
             openCardData.stock = data.stockQuantity;
             openCardData.props.stock = data.stockQuantity;
             if (data.stockQuantity === 0) {

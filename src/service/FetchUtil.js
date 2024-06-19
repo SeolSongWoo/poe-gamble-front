@@ -36,7 +36,11 @@ export default class FetchUtil {
             if(fetchOption.headers === FetchUtil.CONTENT_TYPE.ZIP) {
                 jsonResponse = await response.blob();
             }else {
-                jsonResponse = await response.json();
+                const headers = {};
+                response.headers.forEach((value, name) => {
+                    headers[name] = value;
+                });
+                jsonResponse = {body:await response.json(), headers:headers};
             }
         } catch (error) {
             jsonResponse = error;

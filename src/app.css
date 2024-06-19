@@ -1,3 +1,9 @@
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
 @font-face {
     font-family: fontin;
     src: url("/font/Fontin-Italic.otf") format("truetype");
