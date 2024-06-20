@@ -8,5 +8,4 @@ export async function POST({cookies,request}) {
         return new Response(null,{status:response.status})
     }
     return new Response(JSON.stringify({data:response.body.data,status: 200}),{status: 200})
-
 }

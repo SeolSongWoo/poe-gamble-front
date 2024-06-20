@@ -3,7 +3,9 @@
     import {CARD_META_DATA} from "$lib/item/card/CardMetaData.js";
     import InventoryItem from "$lib/inventory/InventoryItem.svelte";
     import Card from "$lib/item/card/Card.svelte";
-    import {Button, ButtonGroup, Input, InputAddon, Label, NumberInput} from "flowbite-svelte";
+    import {Alert, Button, ButtonGroup, Input, InputAddon, Label, NumberInput} from "flowbite-svelte";
+    import {Throttle} from "../../service/FunctionUtil.js";
+    import {InfoCircleSolid} from "flowbite-svelte-icons";
 
     /**
      * @type {Array[any]}
@@ -15,6 +17,9 @@
     let isSplitPopupOpen = false;
     let selectItemData = {};
     let splitValue = 0;
+    let splitMaxValue = 0;
+
+    let opacity = "opacity-0";
 
     let itemNode = null;
 
@@ -38,7 +43,7 @@
             items[index].stock -= splitValue;
             const emptyIndex = getEmptyIndex();
             items[getEmptyIndex()] = {index: emptyIndex, type: "CARD", name: items[index].name, stock: splitValue};
-        }else if(index === -1 && isCardOpen) {
+        } else if (index === -1 && isCardOpen) {
             const emptyIndex = getEmptyIndex();
             selectItemData.props.stock -= splitValue;
             selectItemData.stock -= splitValue;
@@ -48,6 +53,11 @@
     }
 
     function handleItemClick(event) {
+        if (isCardOpen && event.detail.shiftKey) {
+            const index = items.findIndex(item => item.type === "EMPTY");
+            items[index] = {...selectItemData.props}
+            items[index].index = index;
+        }
         selectItemData = event.detail.item;
         if (event.detail.shiftKey) {
             isCardOpen = true;
@@ -55,13 +65,15 @@
             const index = items.findIndex(item => item.index === selectItemData.props.index);
             items[index] = {index: selectItemData.props.index, type: "EMPTY", name: "", stock: "0"};
         } else if (event.detail.ctrlKey) {
+            splitValue = selectItemData.stock / 2 < 1 ? 1 : Math.floor(selectItemData.stock / 2);
+            splitMaxValue = selectItemData.stock;
             isSplitPopupOpen = true;
         }
     }
 
     async function tryGambling(event) {
         if (selectItemData.stock === 0 || selectItemData.stock > (CARD_META_DATA[selectItemData.name].maxQuantity / 2)) {
-            console.log('card not enough stock')
+            viewDangerAlert();
             return;
         }
         if (selectItemData) {
@@ -91,18 +103,35 @@
 
 
     function handleHortCardClick(event) {
-        if(event.detail.ctrlKey) {
+        if (event.detail.ctrlKey) {
             isSplitPopupOpen = true;
-        }else {
+            splitValue = selectItemData.stock / 2 < 1 ? 1 : Math.floor(selectItemData.stock / 2);
+            splitMaxValue = selectItemData.stock;
+            isSplitPopupOpen = true;
+        } else {
             isCardOpen = false;
+            isSplitPopupOpen = false;
             const index = items.findIndex(item => item.type === "EMPTY");
             items[index] = {...selectItemData.props}
             items[index].index = index;
         }
     }
 
-</script>
+    function viewDangerAlert() {
+        opacity = "opacity-100";
 
+        setTimeout(() => {
+            opacity = "opacity-0";
+        }, 1500);
+    }
+
+</script>
+<div class="{opacity} transition-opacity duration-1000">
+    <Alert border color="red">
+        <InfoCircleSolid slot="icon" class="w-5 h-5"/>
+        이용 가능한 카드 최대 갯수가 초과하였습니다.
+    </Alert>
+</div>
 <div style="display: flex">
     <div class="inventory" bind:this={itemNode}>
         {#each items as item}
@@ -115,15 +144,15 @@
     </div>
     {#if isCardOpen}
         <Card on:click={handleHortCardClick} bind:card="{selectItemData}"/>
-        <Button on:click={tryGambling} color="alternative">실행</Button>
+        <Button on:click={Throttle(tryGambling,100)} color="alternative">실행</Button>
     {/if}
     {#if isSplitPopupOpen}
         <div>
-        <ButtonGroup class="w-full" size="sm">
-            <InputAddon>Split</InputAddon>
-            <NumberInput bind:value={splitValue} max={CARD_META_DATA[selectItemData.name].maxQuantity / 2}/>
-            <Button color="primary" on:click={() => onSplitCard(splitValue)}>Split</Button>
-        </ButtonGroup>
+            <ButtonGroup class="w-full" size="sm">
+                <InputAddon>Split</InputAddon>
+                <NumberInput bind:value={splitValue} min="1" max={splitMaxValue}/>
+                <Button color="primary" on:click={() => onSplitCard(splitValue)}>Split</Button>
+            </ButtonGroup>
         </div>
     {/if}
 </div>

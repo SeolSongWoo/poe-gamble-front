@@ -4,11 +4,11 @@
 
 <div class="main-container">
     <div class="title">
-        <P size="6xl">POE Gamble Simulator</P>
+        <P align="center" size="6xl">POE Gamble Simulator</P>
     </div>
     <div class="link-group">
-        <Button size="xl" color="dark" href="/login">FreeMode</Button>
-        <Button size="xl" color="dark" href="/login">RankMode</Button>
+        <Button class="m-2" size="xl" color="dark" href="/login">FreeMode</Button>
+        <Button class="m-2  " size="xl" color="dark" href="/login">RankMode</Button>
     </div>
 </div>
 
@@ -27,9 +27,11 @@
     }
     .link-group {
         position: absolute;
-        top: 60%;
+        top: 70%;
         left: 50%;
         transform: translate(-50%, -50%);
+        text-align: -webkit-center;
+        margin: 10px 10px;
     }
 
     a {
