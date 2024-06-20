@@ -73,7 +73,7 @@
 
 </script>
 
-<span class="{nowClass.container}" on:click={() => dispatch('click', card)} >
+<span class="{nowClass.container}" on:click={(event) => dispatch('click', {card,ctrlKey:event.ctrlKey})} >
     <span class="{nowClass.image}">
         <img style="width: 100%; height: 100%;" src={itemImage} alt={card.name}/>
     </span>

@@ -15,10 +15,6 @@
     let isSplitPopupOpen = false;
     let selectItemData = {};
     let splitValue = 0;
-    $: if (isCardOpen) {
-        const index = items.findIndex(item => item.index === selectItemData.props.index);
-        items[index] = {index: selectItemData.props.index, type: "EMPTY", name: "", stock: "0"};
-    }
 
     let itemNode = null;
 
@@ -42,6 +38,11 @@
             items[index].stock -= splitValue;
             const emptyIndex = getEmptyIndex();
             items[getEmptyIndex()] = {index: emptyIndex, type: "CARD", name: items[index].name, stock: splitValue};
+        }else if(index === -1 && isCardOpen) {
+            const emptyIndex = getEmptyIndex();
+            selectItemData.props.stock -= splitValue;
+            selectItemData.stock -= splitValue;
+            items[getEmptyIndex()] = {index: emptyIndex, type: "CARD", name: selectItemData.name, stock: splitValue};
         }
         isSplitPopupOpen = false;
     }
@@ -51,6 +52,8 @@
         if (event.detail.shiftKey) {
             isCardOpen = true;
             isSplitPopupOpen = false;
+            const index = items.findIndex(item => item.index === selectItemData.props.index);
+            items[index] = {index: selectItemData.props.index, type: "EMPTY", name: "", stock: "0"};
         } else if (event.detail.ctrlKey) {
             isSplitPopupOpen = true;
         }
@@ -87,10 +90,15 @@
     }
 
 
-    function handleHortCardClick() {
-        isCardOpen = false;
-        const index = items.findIndex(item => item.type === "EMPTY");
-        items[index] = {...selectItemData.props}
+    function handleHortCardClick(event) {
+        if(event.detail.ctrlKey) {
+            isSplitPopupOpen = true;
+        }else {
+            isCardOpen = false;
+            const index = items.findIndex(item => item.type === "EMPTY");
+            items[index] = {...selectItemData.props}
+            items[index].index = index;
+        }
     }
 
 </script>
