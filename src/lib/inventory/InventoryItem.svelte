@@ -13,13 +13,13 @@
                 name : itemProps.name,
                 src : "/image/inven_card.png",
                 stock : itemProps.stock,
-                props:itemProps
+                props: itemProps
             }
             break;
     }
 
     function handleCLick(event) {
-        dispatch('click', item);
+        dispatch('click', {item,shiftKey:event.shiftKey,ctrlKey:event.ctrlKey});
     }
 
     function handleView(event) {
