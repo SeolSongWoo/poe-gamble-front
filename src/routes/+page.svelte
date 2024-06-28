@@ -7,8 +7,8 @@
         <P align="center" size="6xl">POE Gamble Simulator</P>
     </div>
     <div class="link-group">
-        <Button class="m-2" size="xl" color="dark" href="/login">FreeMode</Button>
-        <Button class="m-2  " size="xl" color="dark" href="/login">RankMode</Button>
+        <Button class="m-2" size="xl" color="primary" href="/login">FreeMode</Button>
+        <Button class="m-2" size="xl" color="light" href="/login">RankMode</Button>
     </div>
 </div>
 
